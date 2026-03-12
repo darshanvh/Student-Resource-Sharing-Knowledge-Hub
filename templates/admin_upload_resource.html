@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Resource - Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #667eea;
+            padding: 30px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 0 20px;
+            margin-bottom: 40px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+
+        .nav-menu li a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        .nav-menu li a:hover,
+        .nav-menu li a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .logout-item {
+            margin-top: auto;
+        }
+
+        .logout-link {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .content-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .welcome-card h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            background: #f8f9fa;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        select {
+            background: white;
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn-submit {
+            background: #28a745;
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: #218838;
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+        }
+
+        .alert {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .file-info {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                padding: 15px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .content-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="nav-brand">Admin Portal</div>
+        <ul class="nav-menu">
+            <li><a href="/admin_dashboard">🏠 Dashboard</a></li>
+            <li><a href="/admin_users">👥 My Users</a></li>
+            <li><a href="/admin_resources" class="active">📚 Admin Resources</a></li>
+            <li><a href="/access_resources">🔍 View All Resources</a></li>
+            <li class="logout-item"><a href="/logout" class="logout-link">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="content-box">
+            <a href="/admin_resources" class="btn-back">← Back to Resources</a>
+            
+            <h2>Upload New Resource</h2>
+            <div class="welcome-card">
+                <h3>Admin Upload</h3>
+                <p>Upload a new resource to share with all users. The resource will be automatically approved.</p>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="title">Resource Title *</label>
+                    <input type="text" id="title" name="title" required placeholder="Enter resource title">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <input type="text" id="subject" name="subject" required placeholder="e.g., Data Structures">
+                    </div>
+                    <div class="form-group">
+                        <label for="semester">Semester *</label>
+                        <select id="semester" name="semester" required>
+                            <option value="">Select Semester</option>
+                            <option value="Semester 1">Semester 1</option>
+                            <option value="Semester 2">Semester 2</option>
+                            <option value="Semester 3">Semester 3</option>
+                            <option value="Semester 4">Semester 4</option>
+                            <option value="Semester 5">Semester 5</option>
+                            <option value="Semester 6">Semester 6</option>
+                            <option value="Semester 7">Semester 7</option>
+                            <option value="Semester 8">Semester 8</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="resource_type">Resource Type *</label>
+                        <select id="resource_type" name="resource_type" required>
+                            <option value="">Select Type</option>
+                            <option value="Notes">Notes</option>
+                            <option value="Question Papers">Question Papers</option>
+                            <option value="Book">Book</option>
+                            <option value="Assignment">Assignment</option>
+                            <option value="Project">Project</option>
+                            <option value="Lab Manual">Lab Manual</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="year_batch">Year/Batch *</label>
+                        <input type="text" id="year_batch" name="year_batch" required placeholder="e.g., 2024">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="privacy">Privacy</label>
+                    <select id="privacy" name="privacy">
+                        <option value="Public">Public - Visible to all users</option>
+                        <option value="Private">Private - Only visible to you</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="file">File *</label>
+                    <input type="file" id="file" name="file" required accept=".pdf,.docx,.doc,.ppt,.pptx,.jpg,.jpeg,.png,.txt,.zip">
+                    <div class="file-info">Allowed formats: PDF, DOCX, DOC, PPT, PPTX, JPG, JPEG, PNG, TXT, ZIP (Max 16MB)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Enter a brief description of the resource..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">⬆ Upload Resource</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
