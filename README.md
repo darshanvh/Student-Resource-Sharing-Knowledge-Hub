@@ -66,8 +66,62 @@ This system improves collaboration among students and creates a centralized acad
 
 project/
 │
-├── templates/ # HTML templates
-├── uploads/ # Uploaded files
-├── app.py # Main Flask application
-├── users.db # SQLite database
-└── README.md # Project documentation
+├── templates/
+│   ├── login.html
+│   ├── signup.html
+│   ├── dashboard.html
+│   └── access_resources.html
+│
+├── uploads/
+│
+├── app.py
+├── users.db
+└── README.md
+
+
+
+
+
+---
+
+## 🔒 Security Features
+
+- Password hashing using **Werkzeug**
+- Secure file uploads
+- File type validation
+- Session-based authentication
+- Resource access control
+
+---
+
+## 📊 Database Tables
+
+The SQLite database contains the following tables:
+
+- **users** – Stores user account information
+- **resources** – Stores uploaded study resources
+- **reviews** – Stores ratings and reviews
+- **download_history** – Tracks downloaded resources
+
+---
+
+## 🔮 Future Enhancements
+
+- Email verification system
+- Advanced search and filters
+- Mobile responsive UI
+- Resource recommendation system
+- Cloud storage integration
+- Online collaboration features
+
+---
+
+## 👨‍💻 Author
+
+**Darshan Hegde**
+
+---
+
+## 📜 License
+
+This project is developed for **educational purposes only**.
